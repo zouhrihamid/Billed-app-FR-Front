@@ -1,15 +1,16 @@
 /**
  * @jest-environment jsdom
  */
-
-import { screen, waitFor, fireEvent } from "@testing-library/dom";
-import NewBillUI from "../views/NewBillUI.js";
-import { localStorageMock } from "../__mocks__/localStorage.js"; 
-import mockStore from "../__mocks__/store";
-import { ROUTES_PATH } from '../constants/routes.js';
+import { fireEvent, screen, waitFor } from "@testing-library/dom";
+import NewBillUI from "../views/NewBillUI.js"; // Votre composant UI
+import NewBill from "../containers/NewBill.js"; // Votre classe NewBill
+import { localStorageMock } from "../__mocks__/localStorage.js";
+import mockStore from "../__mocks__/store.js";
 import router from "../app/Router.js";
+import { ROUTES_PATH } from "../constants/routes.js";
+
 import store from "../__mocks__/store";
-import NewBill from "../containers/NewBill.js";
+
 
 // Mock du store
 jest.mock("../app/store", () => mockStore);
@@ -75,96 +76,92 @@ describe("Given I am connected as an employee", () => {
       expect(updateBill).toHaveBeenCalled();
     });
   });
-
+})
   //****************************** Test d'intégration : Erreur API lors de l'envoi des données */
-  describe("When an API error occurs while submitting a new bill", () => {
-    beforeEach(() => {
-      // Simuler un utilisateur connecté
-      Object.defineProperty(window, 'localStorage', { value: localStorageMock });
-      window.localStorage.setItem('user', JSON.stringify({ type: 'Employee', email: "employee@test.com" }));
 
-      // Charger le DOM de la page NewBill
-      const root = document.createElement('div');
-      root.setAttribute('id', 'root');
-      document.body.appendChild(root);
-      router();
-      window.onNavigate(ROUTES_PATH.NewBill);
-    });
 
-    test("It should display an error message when the API returns a 404 error", async () => {
-      // Simuler l'erreur 404 lors de l'appel à la méthode store.bills.create
-      mockStore.bills.mockImplementationOnce(() => {
-        return {
-          create: () => {
-            return Promise.reject(new Error("Erreur 404"));
-          }
-        };
+  describe("Given I am connected as an employee", () => {
+    describe("When I submit the form and API returns 404", () => {
+      beforeEach(() => {
+        Object.defineProperty(window, 'localStorage', { value: localStorageMock });
+        window.localStorage.setItem('user', JSON.stringify({ type: 'Employee' }));
+        document.body.innerHTML = NewBillUI();
       });
-
-      // Instancier la classe NewBill
-      const newBill = new NewBill({ document, onNavigate: jest.fn(), store: mockStore, localStorage: window.localStorage });
-
-      // Remplir les champs du formulaire
-      screen.getByTestId("expense-type").value = "Transports";
-      screen.getByTestId("expense-name").value = "Taxi";
-      screen.getByTestId("datepicker").value = "2024-10-18";
-      screen.getByTestId("amount").value = "100";
-      screen.getByTestId("vat").value = "20";
-      screen.getByTestId("pct").value = "20";
-      screen.getByTestId("commentary").value = "Business trip";
-
-      // Simuler l'ajout d'un fichier valide
-      const fileInput = screen.getByTestId("file");
-      const validFile = new File(["image"], "image.png", { type: "image/png" });
-      fireEvent.change(fileInput, { target: { files: [validFile] } });
-
-      // Simuler la soumission du formulaire
-      const form = screen.getByTestId("form-new-bill");
-      fireEvent.submit(form);
-
-      // Attendre que l'erreur 404 soit capturée
-      await waitFor(() => expect(mockStore.bills().create).toHaveBeenCalled());
-
-      // Vérifier que l'erreur 404 est bien gérée (par exemple, avec un message d'erreur dans la console)
-      expect(console.error).toHaveBeenCalledWith(new Error("Erreur 404"));
-    });
-
-    test("It should display an error message when the API returns a 500 error", async () => {
-      // Simuler l'erreur 500 lors de l'appel à la méthode store.bills.create
-      mockStore.bills.mockImplementationOnce(() => {
-        return {
-          create: () => {
-            return Promise.reject(new Error("Erreur 500"));
-          }
-        };
+  
+      test("Then I should see a 404 error message", async () => {
+        const newBillInstance = new NewBill({
+          document,
+          onNavigate: jest.fn(),
+          store: mockStore,
+          localStorage: window.localStorage,
+        });
+  
+        // Simuler une erreur 404 lors de la création de la facture
+        mockStore.bills.mockImplementationOnce(() => ({
+          create: jest.fn(() => Promise.reject({ status: 404 }))
+        }));
+  
+        // Remplir le formulaire avec des données valides
+        screen.getByTestId("expense-type").value = "Transports";
+        screen.getByTestId("expense-name").value = "Taxi";
+        screen.getByTestId("datepicker").value = "2024-10-18";
+        screen.getByTestId("amount").value = "100";
+        screen.getByTestId("vat").value = "20";
+        screen.getByTestId("pct").value = "20";
+        screen.getByTestId("commentary").value = "Business trip";
+        
+        const fileInput = screen.getByTestId("file");
+        const validFile = new File(["image"], "image.png", { type: "image/png" });
+        fireEvent.change(fileInput, { target: { files: [validFile] } });
+  
+        const form = screen.getByTestId("form-new-bill");
+        fireEvent.submit(form);  // Simuler la soumission du formulaire
+  
+        await waitFor(() => {
+          expect(screen.getByText(/Erreur 404/)).toBeTruthy(); // Vérifie que l'erreur est affichée
+        });
       });
-
-      // Instancier la classe NewBill
-      const newBill = new NewBill({ document, onNavigate: jest.fn(), store: mockStore, localStorage: window.localStorage });
-
-      // Remplir les champs du formulaire
-      screen.getByTestId("expense-type").value = "Transports";
-      screen.getByTestId("expense-name").value = "Taxi";
-      screen.getByTestId("datepicker").value = "2024-10-18";
-      screen.getByTestId("amount").value = "100";
-      screen.getByTestId("vat").value = "20";
-      screen.getByTestId("pct").value = "20";
-      screen.getByTestId("commentary").value = "Business trip";
-
-      // Simuler l'ajout d'un fichier valide
-      const fileInput = screen.getByTestId("file");
-      const validFile = new File(["image"], "image.png", { type: "image/png" });
-      fireEvent.change(fileInput, { target: { files: [validFile] } });
-
-      // Simuler la soumission du formulaire
-      const form = screen.getByTestId("form-new-bill");
-      fireEvent.submit(form);
-
-      // Attendre que l'erreur 500 soit capturée
-      await waitFor(() => expect(mockStore.bills().create).toHaveBeenCalled());
-
-      // Vérifier que l'erreur 500 est bien gérée (par exemple, avec un message d'erreur dans la console)
-      expect(console.error).toHaveBeenCalledWith(new Error("Erreur 500"));
+    });
+  
+    describe("When I submit the form and API returns 500", () => {
+      beforeEach(() => {
+        Object.defineProperty(window, 'localStorage', { value: localStorageMock });
+        window.localStorage.setItem('user', JSON.stringify({ type: 'Employee' }));
+        document.body.innerHTML = NewBillUI();
+      });
+  
+      test("Then I should see a 500 error message", async () => {
+        const newBillInstance = new NewBill({
+          document,
+          onNavigate: jest.fn(),
+          store: mockStore,
+          localStorage: window.localStorage,
+        });
+  
+        // Simuler une erreur 500 lors de la création de la facture
+        mockStore.bills.mockImplementationOnce(() => ({
+          create: jest.fn(() => Promise.reject({ status: 500 }))
+        }));
+  
+        // Remplir le formulaire avec des données valides
+        screen.getByTestId("expense-type").value = "Transports";
+        screen.getByTestId("expense-name").value = "Taxi";
+        screen.getByTestId("datepicker").value = "2024-10-18";
+        screen.getByTestId("amount").value = "100";
+        screen.getByTestId("vat").value = "20";
+        screen.getByTestId("pct").value = "20";
+        screen.getByTestId("commentary").value = "Business trip";
+        
+        const fileInput = screen.getByTestId("file");
+        const validFile = new File(["image"], "image.png", { type: "image/png" });
+        fireEvent.change(fileInput, { target: { files: [validFile] } });
+  
+        const form = screen.getByTestId("form-new-bill");
+        fireEvent.submit(form);  // Simuler la soumission du formulaire
+  
+        await waitFor(() => {
+          expect(screen.getByText(/Erreur 500/)).toBeTruthy(); // Vérifie que l'erreur est affichée
+        });
+      });
     });
   });
-});

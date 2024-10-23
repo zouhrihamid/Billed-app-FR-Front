@@ -91,5 +91,5 @@ export const mockedBills = {
 // }
 
 export default {
-  bills: jest.fn(() => mockedBills), // Ajoutez jest.fn ici pour mocker bills
+  bills: jest.fn(() => mockedBills), 
 };
