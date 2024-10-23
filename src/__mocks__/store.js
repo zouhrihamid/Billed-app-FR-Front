@@ -1,4 +1,4 @@
-const mockedBills = {
+export const mockedBills = {
   list() {
     return Promise.resolve([{
       "id": "47qAXb6fIm2zOKkLzMro",
@@ -84,10 +84,12 @@ const mockedBills = {
   },
 }
 
-export default {
-  bills() {
-    return mockedBills
-    //return {}
-  },
-}
+// export default {   bills() {
+//     return mockedBills
+//     //return {}
+//   },
+// }
 
+export default {
+  bills: jest.fn(() => mockedBills), // Ajoutez jest.fn ici pour mocker bills
+};

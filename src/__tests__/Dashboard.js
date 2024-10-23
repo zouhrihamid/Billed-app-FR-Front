@@ -197,6 +197,7 @@ describe('Given I am connected as Admin, and I am on Dashboard page, and I click
       const onNavigate = (pathname) => {
         document.body.innerHTML = ROUTES({ pathname })
       }
+     
       const store = null
       const dashboard = new Dashboard({
         document, onNavigate, store, bills, localStorage: window.localStorage

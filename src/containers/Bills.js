@@ -18,7 +18,8 @@ export default class {
 
   handleClickNewBill = () => {
     this.onNavigate(ROUTES_PATH['NewBill'])
-  }
+       
+    }
 
   handleClickIconEye = (icon) => {
     const billUrl = icon.getAttribute("data-bill-url")
@@ -49,12 +50,13 @@ export default class {
                 ...doc,
                 date: doc.date,
                 status: formatStatus(doc.status)
-              }
+              };
             }
           })
           console.log('length', bills.length)
         return bills
       })
+      
     }
   }
 }

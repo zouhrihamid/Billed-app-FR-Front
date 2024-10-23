@@ -6,6 +6,7 @@ import LoginUI from "../views/LoginUI";
 import Login from "../containers/Login.js";
 import { ROUTES } from "../constants/routes";
 import { fireEvent, screen } from "@testing-library/dom";
+import userEvent from "@testing-library/user-event";
 
 describe("Given that I am a user on login page", () => {
   describe("When I do not fill fields and I click on employee button Login In", () => {
@@ -205,11 +206,12 @@ describe("Given that I am a user on login page", () => {
         PREVIOUS_LOCATION,
         store,
       });
-
+//ici probleme
       const handleSubmit = jest.fn(login.handleSubmitAdmin);
       login.login = jest.fn().mockResolvedValue({});
       form.addEventListener("submit", handleSubmit);
       fireEvent.submit(form);
+
       expect(handleSubmit).toHaveBeenCalled();
       expect(window.localStorage.setItem).toHaveBeenCalled();
       expect(window.localStorage.setItem).toHaveBeenCalledWith(
@@ -222,8 +224,9 @@ describe("Given that I am a user on login page", () => {
         })
       );
     });
-
+    console.log(screen.queryByText("Validations"));
     test("It should renders HR dashboard page", () => {
+      
       expect(screen.queryByText("Validations")).toBeTruthy();
     });
   });
