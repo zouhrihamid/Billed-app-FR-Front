@@ -17,7 +17,7 @@ export default class NewBill {
     new Logout({ document, localStorage, onNavigate })
   }
   handleChangeFile = e => {
-    console.log("handleChangeFile called");
+  
     e.preventDefault()
     const fileInput = this.document.querySelector(`input[data-testid="file"]`)
     const file = fileInput.files[0];
@@ -62,15 +62,7 @@ export default class NewBill {
        
       }).catch(error => 
         console.error(error));
-        // Afficher l'erreur dans l'UI
-        // if (error.status === 404) {
-        //   document.body.innerHTML = `<div style="color: red;">Erreur 404: Ressource non trouvée</div>`;
-        // } else if (error.status === 500) {
-        //   document.body.innerHTML = `<div style="color: red;">Erreur 500: Erreur interne du serveur</div>`;
-        // }else {
-        //   document.body.innerHTML = `<div style="color: red;">Erreur inattendue</div>`;
-        // }
-      
+              
   }
   handleSubmit = e => {
     e.preventDefault()

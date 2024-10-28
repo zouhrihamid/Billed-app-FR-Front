@@ -146,7 +146,7 @@ describe("Given I am connected as an employee", () => {
       const input = screen.getByTestId('file');
   
       input.addEventListener('change', handleChangeFile1);
-      console.log('Uploading file...');
+     // console.log('Uploading file...');
       userEvent.upload(input, file);
   
       await new Promise(process.nextTick);
@@ -159,92 +159,3 @@ describe("Given I am connected as an employee", () => {
   });
   
 
-
-  //   describe("When I submit the form and API returns 404", () => {
-  //     beforeEach(() => {
-  //       Object.defineProperty(window, 'localStorage', { value: localStorageMock });
-  //       window.localStorage.setItem('user', JSON.stringify({ type: 'Employee' }));
-  //       document.body.innerHTML = NewBillUI();
-  //     });
-  
-  //     test("Then I should see a 404 error message", async () => {
-  //       const newBillInstance = new NewBill({
-  //         document,
-  //         onNavigate: jest.fn(),
-  //         store: mockStore,
-  //         localStorage: window.localStorage,
-  //       });
-  
-  //       // Simuler une erreur 404 lors de la création de la facture
-  //       mockStore.bills.mockImplementationOnce(() => ({
-  //         create: jest.fn(() => Promise.reject({ status: 404 })),
-  //       }));
-  
-  //       // Remplir le formulaire avec des données valides
-  //       screen.getByTestId("expense-type").value = "Transports";
-  //       screen.getByTestId("expense-name").value = "Taxi";
-  //       screen.getByTestId("datepicker").value = "2024-10-18";
-  //       screen.getByTestId("amount").value = "100";
-  //       screen.getByTestId("vat").value = "20";
-  //       screen.getByTestId("pct").value = "20";
-  //       screen.getByTestId("commentary").value = "Business trip";
-        
-  //       const fileInput = screen.getByTestId("file");
-  //       const validFile = new File(["image"], "image.png", { type: "image/png" });
-  //       fireEvent.change(fileInput, { target: { files: [validFile] } });
-  //         // Ajouter un test pour vérifier que le fichier est bien assigné
-  //       expect(fileInput.files[0].name).toBe("image.png");
-  //       const form = screen.getByTestId("form-new-bill");
-  //       fireEvent.submit(form);  // Simuler la soumission du formulaire
-  //       await waitFor(() => {
-  //         const errorMessage = screen.getByText((content) => content.includes("Erreur 404"));
-  //         expect(errorMessage).toBeTruthy();  // Vérifie que l'erreur 404 est affichée
-  //       });
-  //     });
-  //   });
-  
-  //   describe("When I submit the form and API returns 500", () => {
-  //     beforeEach(() => {
-  //       Object.defineProperty(window, 'localStorage', { value: localStorageMock });
-  //       window.localStorage.setItem('user', JSON.stringify({ type: 'Employee' }));
-  //       document.body.innerHTML = NewBillUI();
-  //     });
-    
-
-
-  //     test("Then I should see a 500 error message", async () => {
-  //       const newBillInstance = new NewBill({
-  //         document,
-  //         onNavigate: jest.fn(),
-  //         store: mockStore,
-  //         localStorage: window.localStorage,
-  //       });
-  
-  //       // Simuler une erreur 500 lors de la création de la facture
-  //       mockStore.bills.mockImplementationOnce(() => ({
-  //         create: jest.fn(() => Promise.reject({ status: 500 })),
-  //       }));
-  
-  //       // Remplir le formulaire avec des données valides
-  //       screen.getByTestId("expense-type").value = "Transports";
-  //       screen.getByTestId("expense-name").value = "Taxi";
-  //       screen.getByTestId("datepicker").value = "2024-10-18";
-  //       screen.getByTestId("amount").value = "100";
-  //       screen.getByTestId("vat").value = "20";
-  //       screen.getByTestId("pct").value = "20";
-  //       screen.getByTestId("commentary").value = "Business trip";
-        
-  //       const fileInput = screen.getByTestId("file");
-  //       const validFile = new File(["image"], "image.png", { type: "image/png" });
-  //       fireEvent.change(fileInput, { target: { files: [validFile] } });
-  //         // Ajouter un test pour vérifier que le fichier est bien assigné
-  //       expect(fileInput.files[0].name).toBe("image.png");
-  //       const form = screen.getByTestId("form-new-bill");
-  //       fireEvent.submit(form);  // Simuler la soumission du formulaire
-        
-  //       await waitFor(() => {
-  //         const errorMessage = screen.getByText((content) => content.includes("Erreur 500"));
-  //         expect(errorMessage).toBeTruthy();  // Vérifie que l'erreur 500 est affichée
-  //       });
-  //     });
-  //  });
