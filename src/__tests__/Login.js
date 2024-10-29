@@ -224,7 +224,7 @@ describe("Given that I am a user on login page", () => {
         })
       );
     });
-    console.log(screen.queryByText("Validations"));
+    //console.log(screen.queryByText("Validations"));
     test("It should renders HR dashboard page", () => {
       
       expect(screen.queryByText("Validations")).toBeTruthy();

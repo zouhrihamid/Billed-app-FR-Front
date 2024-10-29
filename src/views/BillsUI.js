@@ -27,6 +27,10 @@ const rows = (data) => {
     return dateB- dateA}).map(bill => row(bill)).join("") : "";
 }
 
+// const rows = (data) => {
+//   return (data && data.length) ? data.map(bill => row(bill)).join("") : ""
+// }
+
 export default ({ data: bills, loading, error }) => {
   
   const modal = () => (`
